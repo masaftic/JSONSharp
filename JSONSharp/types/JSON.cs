@@ -19,6 +19,7 @@ public abstract class JSON
 JSONValue   JSONObject
 - number
 - boolean
+- string
 - array
 - null
 

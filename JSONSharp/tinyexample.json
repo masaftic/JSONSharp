@@ -1,11 +1,3 @@
 {
-    "id": 4,
-    "user_id": "user_id_value",
-    "fsa": true,
-    "eqw": false,
-    "sqd": null,
-    "awesomeobject": {
-        "SomeProps1": 1,
-        "SomeProps2": "test"
-    }
+    "id": 4
 }

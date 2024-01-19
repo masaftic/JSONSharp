@@ -14,6 +14,7 @@ public class PrettyPrint : IVisitor<string>
 {
     private int _nestLevel = 0;
     public int SpaceCount { get; set; } = 4;
+    
     public string Stringifiy(JSON json)
     {
         return json.Accept(this);

@@ -1,43 +1,44 @@
 
 
+using System.Text.Json.Nodes;
 using JSONSharp.PrettyPrint;
 using JSONSharp.types;
 
-namespace JSONTest
+namespace JSONTest;
+
+public class UnitTest1
 {
-	public class UnitTest1
+	[Fact]
+	public void Test1()
 	{
-		[Fact]
-		public void Test1()
-		{
-			JSONObject root = new JSONObject();
+		JSONObject root = new JSONObject();
 
-			JSONValue abc = new JSONNumber(69);
-			JSONValue vcs = new JSONString("123fva");
-			JSONValue we = new JSONArray();
-			((JSONArray)we).Values.Add(new JSONNumber(122.2));
-			((JSONArray)we).Values.Add(new JSONString("asdv"));
-			((JSONArray)we).Values.Add(new JSONNumber(12.22));
+		JSONValue abc = new JSONNumber(69);
+		JSONValue vcs = new JSONString("123fva");
+		JSONValue we = new JSONArray();
+		((JSONArray)we).Values.Add(new JSONNumber(122.2));
+		((JSONArray)we).Values.Add(new JSONString("asdv"));
+		((JSONArray)we).Values.Add(new JSONNumber(12.22));
 
-			JSONObject nest = new JSONObject();
+		JSONObject nest = new JSONObject();
 
 
-			nest["des"] = new JSONNumber(1);
-			nest["es"] = new  JSONNumber(2);
-			nest["boolt"] = new JSONBool(true);
-			nest["boolf"] = new JSONBool(false);
+		nest["des"] = new JSONNumber(1);
+		nest["es"] = new JSONNumber(2);
+		nest["boolt"] = new JSONBool(true);
+		nest["boolf"] = new JSONBool(false);
 
-			root["abc"] = abc;
-			root["vcs"] = vcs;
-			root["we"] = we;
+		root["abc"] = abc;
+		root["vcs"] = vcs;
+		root["we"] = we;
 
-			root["nest"] = nest;
+		root["nest"] = nest;
 
-			PrettyPrint printer = new();
-			string json = printer.Stringifiy(root);
-			Console.WriteLine(json);
+		PrettyPrint printer = new();
+		string json = printer.Stringifiy(root);
+		Console.WriteLine(json);
 
-			string t = """
+		string expected = """
 {
     "abc": 69,
     "vcs": "123fva",
@@ -54,10 +55,33 @@ namespace JSONTest
     }
 }
 """;
-			t = t.Replace("\r\n", "\n");
+		expected = expected.Replace("\r\n", "\n");
 
-			if (t != json)
-				throw new Exception();
-		}
+		if (expected != json)
+			throw new Exception();
+	}
+
+	[Fact]
+	public void Test2()
+	{
+		JSONObject obj = new JSONObject();
+
+		obj["apple"] = new JSONNumber(69);
+		obj["orange"] = new JSONBool(true);
+
+		var printer = new PrettyPrint();
+		string jsonString = printer.Stringifiy(obj);
+
+		string expected = """
+{
+    "apple": 69,
+    "orange": true
+}
+""";
+		expected = expected.Replace("\r\n", "\n");
+
+		System.Console.WriteLine(jsonString);
+		if (jsonString != expected)
+			throw new Exception();
 	}
 }

@@ -15,7 +15,10 @@ public class Lexer
     private int _start;
     private int _line = 1;
 
+    private List<Token> _tokens = new();
+
     private bool _lookingForIdentifier = true;
+    private bool _inObjectLexing = true;
 
     private static readonly Dictionary<string, TokenType> _valueWords = new()
     {
@@ -26,28 +29,38 @@ public class Lexer
 
     public Lexer(string source)
     {
-        _source = source;
+        _source = source.Trim();
+    }
+
+    public List<Token> GetTokens()
+    {
+        while (!IsAtEnd())
+        {
+            _tokens.Add(NextToken());
+        }
+
+        return _tokens;
     }
 
     public Token NextToken()
     {
         IgnoreWhiteSpace();
-        _start = _current;
-        if (IsAtEnd())
-        {
-            return new Token(TokenType.EOF, "", null, _line);
-        }
+        if (IsAtEnd()) return new Token(TokenType.EOF, "", null, _line);
+		_start = _current;
         char c = Advance();
         switch (c)
         {
             case '{':
+                _inObjectLexing = true;
                 _lookingForIdentifier = true;
                 return Tokenize(TokenType.LEFT_CURLY_BRACKET);
             case '}':
                 return Tokenize(TokenType.RIGHT_CURLY_BRACKET);
             case '[':
+                _inObjectLexing = false;
                 return Tokenize(TokenType.LEFT_SQUARE_BRACKET);
             case ']':
+                _inObjectLexing = true;
                 return Tokenize(TokenType.RIGHT_SQUARE_BRACKET);
             case '"':
                 return TokenizeString(_lookingForIdentifier ? TokenType.IDENTIFIER : TokenType.STRING);
@@ -55,7 +68,8 @@ public class Lexer
                 _lookingForIdentifier = false;
                 return Tokenize(TokenType.COLON);
             case ',':
-                _lookingForIdentifier = true;
+                if (_inObjectLexing)
+                    _lookingForIdentifier = true;
                 return Tokenize(TokenType.COMMA);
             default:
                 if (char.IsNumber(c))
