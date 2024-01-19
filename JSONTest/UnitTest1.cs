@@ -23,7 +23,7 @@ namespace JSONTest
 
 
 			nest["des"] = new JSONNumber(1);
-			nest["es"] = new JSONNumber(2);
+			nest["es"] = new  JSONNumber(2);
 			nest["boolt"] = new JSONBool(true);
 			nest["boolf"] = new JSONBool(false);
 
