@@ -10,7 +10,7 @@ using JSONSharp.Visitor;
 namespace JSONSharp.PrettyPrint;
 
 
-public class PrettyPrint : IVisitor<string>
+public class PrettyPrinter : IVisitor<string>
 {
     private int _nestLevel = 0;
     public int SpaceCount { get; set; } = 4;

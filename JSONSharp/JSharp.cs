@@ -15,8 +15,8 @@ Lexer lexer = new(File.ReadAllText(args[0]));
 
 
 Parser parser = new Parser(lexer.GetTokens());
-JSON son = parser.ParseJSON();
+JSON son = parser.Parse();
 
-PrettyPrint printer = new();
+PrettyPrinter printer = new();
 Console.WriteLine(printer.Stringifiy(son));
 

@@ -28,7 +28,7 @@ public class Parser
         _tokens = tokens;
     }
 
-    public JSON ParseJSON()
+    public JSON Parse()
     {
         JSON json;
         Token t = Peek();
@@ -71,7 +71,7 @@ public class Parser
         JSONArray array = new JSONArray();
         do
         {
-            array.Values.Add(ParseJSON());
+            array.Values.Add(Parse());
         } while (Match(TokenType.COMMA));
 
         Consume(TokenType.RIGHT_SQUARE_BRACKET, "Expected ']' at end of array");
@@ -87,7 +87,7 @@ public class Parser
             Token identifierToken = Consume(TokenType.IDENTIFIER, "Expected Identifer");
             string identifierName = (string)identifierToken.literal;
             Consume(TokenType.COLON, "Expected ':' after identifier");
-            obj[identifierName] = ParseJSON();
+            obj[identifierName] = Parse();
 
         } while (Match(TokenType.COMMA));
 
