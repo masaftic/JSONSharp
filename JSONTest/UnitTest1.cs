@@ -34,7 +34,7 @@ public class UnitTest1
 
 		root["nest"] = nest;
 
-		PrettyPrint printer = new();
+		PrettyPrinter printer = new();
 		string json = printer.Stringifiy(root);
 		Console.WriteLine(json);
 
@@ -69,7 +69,7 @@ public class UnitTest1
 		obj["apple"] = new JSONNumber(69);
 		obj["orange"] = new JSONBool(true);
 
-		var printer = new PrettyPrint();
+		var printer = new PrettyPrinter();
 		string jsonString = printer.Stringifiy(obj);
 
 		string expected = """
