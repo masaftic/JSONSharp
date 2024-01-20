@@ -30,7 +30,7 @@ A lightweight C# project for basic JSON parsing, providing functionality to lex 
 
 3. **Stringify:**
     ```csharp
-    PrettyPrinter printer = new();
+    var printer = new PrettyPrinter();
     Console.WriteLine(printer.Stringifiy(json));
     ```
 
