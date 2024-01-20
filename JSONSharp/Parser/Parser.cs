@@ -31,7 +31,6 @@ public class Parser
     public JSON Parse()
     {
         JSON json;
-        Token t = Peek();
         if (Match(TokenType.LEFT_CURLY_BRACKET))
         {
             json = ParseJSONObject();

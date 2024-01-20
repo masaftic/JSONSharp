@@ -15,10 +15,10 @@ public class UnitTest1
 
 		JSONValue abc = new JSONNumber(69);
 		JSONValue vcs = new JSONString("123fva");
-		JSONValue we = new JSONArray();
-		((JSONArray)we).Values.Add(new JSONNumber(122.2));
-		((JSONArray)we).Values.Add(new JSONString("asdv"));
-		((JSONArray)we).Values.Add(new JSONNumber(12.22));
+		JSONArray we = new JSONArray();
+		we.Values.Add(new JSONNumber(122.2));
+		we.Values.Add(new JSONString("asdv"));
+		we.Values.Add(new JSONNumber(12.22));
 
 		JSONObject nest = new JSONObject();
 

@@ -13,14 +13,13 @@ public abstract class JSON
 
 
 /*
-        JSON
-       /    \
-      /      \
-JSONValue   JSONObject
+             JSON
+       /      |       \
+      /       |        \
+JSONValue  JSONArray   JSONObject
 - number
 - boolean
 - string
-- array
 - null
 
 */

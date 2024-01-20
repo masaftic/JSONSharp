@@ -13,18 +13,6 @@ public abstract class JSONValue : JSON
 {
 }
 
-public class JSONArray : JSONValue
-{
-    public List<JSON> Values { get; } = new List<JSON>();
-
-    public int Count {get => Values.Count; }
-
-    public override R Accept<R>(IVisitor<R> visitor)
-    {
-        return visitor.VisitJSONArray(this);
-    }
-}
-
 public class JSONNumber : JSONValue
 {
     public double Value { get; }
