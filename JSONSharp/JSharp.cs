@@ -13,10 +13,29 @@ if (args.Length != 1)
 
 Lexer lexer = new(File.ReadAllText(args[0]));
 
+List<Token> tokens = [];
+try
+{
+    tokens = lexer.GetTokens();
+}
+catch (LexError)
+{
+    Environment.Exit(1);
+}
 
-Parser parser = new Parser(lexer.GetTokens());
-JSON son = parser.Parse();
 
-PrettyPrinter printer = new();
-Console.WriteLine(printer.Stringifiy(son));
+Parser parser = new Parser(tokens);
+JSON json = null!;
+
+try
+{
+    json = parser.Parse();
+}
+catch (ParseError)
+{
+    Environment.Exit(1);
+}
+
+var printer = new PrettyPrinter();
+Console.WriteLine(printer.Stringifiy(json));
 

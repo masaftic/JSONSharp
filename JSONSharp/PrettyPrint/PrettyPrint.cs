@@ -107,7 +107,7 @@ public static class StringBuilderExtensions
         return builder;
     }
 
-    public static StringBuilder AppendWithSpace(this StringBuilder builder, char value, int spaceCount)
+    public static StringBuilder AppendWithIndent(this StringBuilder builder, char value, int spaceCount)
     {
 
         builder.Append(GetSpaceString(spaceCount));

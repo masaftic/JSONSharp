@@ -10,6 +10,7 @@ using JSONSharp.lexer;
 using JSONSharp.types;
 using JSONSharp.Visitor;
 using JSONSharp;
+using System.Runtime.Serialization;
 
 
 namespace JSONSharp.Parser;
@@ -22,6 +23,7 @@ public class Parser
 {
     private readonly List<Token> _tokens;
     private int _current = 0;
+    private bool _inObjectOrArray = false;
 
     public Parser(List<Token> tokens)
     {
@@ -33,15 +35,22 @@ public class Parser
         JSON json;
         if (Match(TokenType.LEFT_CURLY_BRACKET))
         {
+            _inObjectOrArray = true;
             json = ParseJSONObject();
-        }
+		}
         else if (Match(TokenType.LEFT_SQUARE_BRACKET))
         {
-            json = ParseJSONArray();
+			_inObjectOrArray = true;
+			json = ParseJSONArray();
+		}
+        else if (_inObjectOrArray)
+        {
+            json = ParseJSONValue();
         }
         else
         {
-            json = ParseJSONValue();
+            Log.Error(Peek(), "Invalid Json. Expected '{' or '['");
+            throw new ParseError();
         }
 
         return json;
@@ -61,16 +70,20 @@ public class Parser
             case TokenType.NULL:
                 return ParseJSONNull();
             default:
-                throw new Exception();
+                Log.Error(Peek(), "Expected value");
+                throw new ParseError();
         }
     }
 
     private JSONArray ParseJSONArray()
     {
         JSONArray array = new JSONArray();
+        bool empty = true;
         do
         {
-            array.Values.Add(Parse());
+			if (Check(TokenType.RIGHT_SQUARE_BRACKET) && empty) break; // empty array
+            empty = false;
+			array.Values.Add(Parse());
         } while (Match(TokenType.COMMA));
 
         Consume(TokenType.RIGHT_SQUARE_BRACKET, "Expected ']' at end of array");
@@ -81,18 +94,21 @@ public class Parser
     private JSONObject ParseJSONObject()
     {
         JSONObject obj = new();
-        do
+		bool empty = true;
+		do
         {
-            Token identifierToken = Consume(TokenType.IDENTIFIER, "Expected Identifer");
+            if (Check(TokenType.RIGHT_CURLY_BRACKET) && empty) break; // empty object
+			empty = false;
+			Token identifierToken = Consume(TokenType.IDENTIFIER, "Expected Identifer or '}'");
             string identifierName = (string)identifierToken.literal;
             Consume(TokenType.COLON, "Expected ':' after identifier");
             obj[identifierName] = Parse();
 
         } while (Match(TokenType.COMMA));
 
-		Consume(TokenType.RIGHT_CURLY_BRACKET, "Expected '}' at end of object");
+        Consume(TokenType.RIGHT_CURLY_BRACKET, "Expected '}' at end of object");
 
-		return obj;
+        return obj;
     }
 
     public JSONValue ParseJSONBool()
@@ -125,9 +141,9 @@ public class Parser
     private Token Consume(TokenType type, string message)
     {
         if (Check(type)) return Advance();
-        
+
         Log.Error(Peek(), message);
-        throw new Exception(message);
+        throw new ParseError(message);
     }
 
     private bool Check(TokenType type)
@@ -159,11 +175,28 @@ public class Parser
 
     private bool Match(TokenType type)
     {
-        if (Check(type)) 
+        if (Check(type))
         {
             Advance();
             return true;
         }
-        return false;
+        return false;  
+    }
+
+}
+
+
+internal class ParseError : Exception
+{
+    public ParseError()
+    {
+    }
+
+    public ParseError(string? message) : base(message)
+    {
+    }
+
+    public ParseError(string? message, Exception? innerException) : base(message, innerException)
+    {
     }
 }

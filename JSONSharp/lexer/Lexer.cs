@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -38,7 +39,7 @@ public class Lexer
         {
             _tokens.Add(NextToken());
         }
-
+        _tokens.Add(new Token(TokenType.EOF, "", null, _line));
         return _tokens;
     }
 
@@ -63,7 +64,7 @@ public class Lexer
                 _inObjectLexing = true;
                 return Tokenize(TokenType.RIGHT_SQUARE_BRACKET);
             case '"':
-                return TokenizeString(_lookingForIdentifier ? TokenType.IDENTIFIER : TokenType.STRING);
+                return TokenizeString(_lookingForIdentifier && _inObjectLexing ? TokenType.IDENTIFIER : TokenType.STRING);
             case ':':
                 _lookingForIdentifier = false;
                 return Tokenize(TokenType.COLON);
@@ -84,12 +85,12 @@ public class Lexer
                         return Tokenize(type, type == TokenType.BOOL ? bool.Parse(valueString) : null);
                     }
                     Error("Unexpected character");
-                    throw new Exception();
+                    throw new LexError();
                 }
                 else
                 {
                     Error("Unexpected character");
-                    throw new Exception();
+                    throw new LexError();
                 }
         }
     }
@@ -121,15 +122,19 @@ public class Lexer
 
     private Token TokenizeNumber()
     {
-        while (char.IsNumber(Peek())) Advance();
+        while (char.IsNumber(Peek()) || Peek() == 'e') Advance();
 
         if (Peek() == '.' && char.IsNumber(Peek(1)))
         {
             Advance();
-            while (char.IsNumber(Peek())) Advance();
+            while (char.IsNumber(Peek()) || Peek() == 'e') Advance();
         }
-
-        return Tokenize(TokenType.NUMBER, Double.Parse(GetLexeme()));
+        if (double.TryParse(GetLexeme(), out double result))
+        {
+            return Tokenize(TokenType.NUMBER, result);
+        }
+        Error("invalid number");
+        throw new LexError();
     }
 
     private void IgnoreWhiteSpace()
@@ -190,4 +195,19 @@ public class Lexer
     {
         Console.Error.WriteLine($"[line {_line}] Error {message}");
     }
+}
+
+internal class LexError : Exception
+{
+	public LexError()
+	{
+	}
+
+	public LexError(string? message) : base(message)
+	{
+	}
+
+	public LexError(string? message, Exception? innerException) : base(message, innerException)
+	{
+	}
 }

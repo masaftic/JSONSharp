@@ -11,7 +11,7 @@ class Log
 {
 	public static void Error(Token token, string message)
 	{
-        Console.WriteLine($"Error: {token.lexeme} at [line: {token.line}].");
+        Console.WriteLine($"Error: '{token.lexeme}' at [line: {token.line}].");
 		Console.WriteLine(message);
 	}
 }
