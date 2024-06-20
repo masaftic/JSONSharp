@@ -59,7 +59,22 @@ public class UnitTest1
 
 		if (expected != json)
 			throw new Exception();
-	}
+
+		if ((JSONNumber)root["nest:des"] != 1)
+		{
+            throw new Exception();
+        }
+
+        if ((JSONNumber)root["we:0"] != 122.2)
+        {
+            throw new Exception();
+        }
+
+        if ((JSONString)root["we:1"] != "asdv")
+        {
+            throw new Exception();
+        }
+    }
 
 	[Fact]
 	public void Test2()

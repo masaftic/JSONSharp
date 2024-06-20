@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Nodes;
-using JSONSharp.lexer;
+﻿using JSONSharp.lexer;
 using JSONSharp.Parser;
 using JSONSharp.PrettyPrint;
 using JSONSharp.types;
@@ -7,7 +6,7 @@ using JSONSharp.types;
 if (args.Length != 1)
 {
     Console.WriteLine($"Usage: dotnet run [file]");
-    System.Environment.Exit(1);
+    Environment.Exit(1);
 }
 
 
@@ -24,18 +23,32 @@ catch (LexError)
 }
 
 
-Parser parser = new Parser(tokens);
-JSON json = null!;
+//Parser parser = new Parser(tokens);
+//JSONValue? json = null;
 
-try
-{
-    json = parser.Parse();
-}
-catch (ParseError)
-{
-    Environment.Exit(1);
-}
+//try
+//{
+//    json = parser.Parse();
+//}
+//catch (ParseError)
+//{
+//    Environment.Exit(1);
+//}
 
-var printer = new PrettyPrinter();
-Console.WriteLine(printer.Stringifiy(json));
+//var printer = new PrettyPrinter(options => options.SpaceCount = 2);
+// Console.WriteLine(printer.Stringifiy(json));
 
+// Console.WriteLine(((JSONObject)json)["properties:age:title"]);
+
+//((JSONObject)json)["required:1:age"] = new JSONNumber(69);
+
+//Console.WriteLine(((JSONObject)json)["required:1:age"]);
+
+
+var jsun = new JSONObject();
+jsun["book"] = new JSONNumber(21);
+
+var ss = jsun["book"];
+
+
+Console.WriteLine(ss);

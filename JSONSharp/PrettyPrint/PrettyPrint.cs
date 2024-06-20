@@ -10,12 +10,27 @@ using JSONSharp.Visitor;
 namespace JSONSharp.PrettyPrint;
 
 
+public class PrettyPrinterOptions
+{
+    public int SpaceCount { get; set; } = 4;
+}
+
 public class PrettyPrinter : IVisitor<string>
 {
     private int _nestLevel = 0;
-    public int SpaceCount { get; set; } = 4;
+    private readonly PrettyPrinterOptions _options;
     
-    public string Stringifiy(JSON json)
+
+    public int Identation => _nestLevel * _options.SpaceCount;
+
+    public PrettyPrinter(Action<PrettyPrinterOptions>? configureOptions = null)
+    {
+        var options = new PrettyPrinterOptions();
+        configureOptions?.Invoke(options);
+        _options = options;
+    }
+
+    public string Stringifiy(JSONValue json)
     {
         return json.Accept(this);
     }
@@ -29,9 +44,9 @@ public class PrettyPrinter : IVisitor<string>
         _nestLevel += 1;
 
         int index = 0;
-        foreach (JSON value in json.Values)
+        foreach (JSONValue value in json.Values)
         {
-            builder.AppendWithIndent(value.Accept(this), _nestLevel * SpaceCount);
+            builder.AppendWithIndent(value.Accept(this), Identation);
             if (index + 1 < json.Count) builder.Append(',');
             builder.Append('\n');
 
@@ -40,7 +55,7 @@ public class PrettyPrinter : IVisitor<string>
 
         _nestLevel -= 1;
 
-        builder.AppendWithIndent("]", _nestLevel * SpaceCount);
+        builder.AppendWithIndent("]", Identation);
 
         return builder.ToString();
     }
@@ -69,11 +84,11 @@ public class PrettyPrinter : IVisitor<string>
         _nestLevel += 1;
 
         int index = 0;
-        foreach ((string identifier, JSON child) it in json.GetValues())
+        foreach ((string identifier, JSONValue child) in json.GetValues())
         {
-            builder.AppendWithIndent(QuoteString(it.identifier), _nestLevel * SpaceCount);
+            builder.AppendWithIndent(QuoteString(identifier), Identation);
             builder.Append(": ");
-            builder.Append(it.child.Accept(this));
+            builder.Append(child.Accept(this));
             if (index + 1 < json.Count) builder.Append(',');
             builder.Append('\n');
             index += 1;
@@ -81,7 +96,7 @@ public class PrettyPrinter : IVisitor<string>
 
         _nestLevel -= 1;
 
-        builder.AppendWithIndent("}", _nestLevel * SpaceCount);
+        builder.AppendWithIndent("}", Identation);
 
         return builder.ToString();
     }

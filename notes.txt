@@ -1,0 +1,49 @@
+
+
+
+list<Class> classes
+
+class c#type
+{
+
+}
+
+
+
+class : c#type 
+{
+    List<c#type>    
+}
+
+prop : c#type 
+{
+    type,
+    name
+}
+
+array : c#type
+{
+    type,
+    name
+}
+
+
+
+
+defineClass(root);
+
+
+
+defineClass()
+    for every definition
+        if prop is value:
+            make prop or field
+        if prop is array
+            make list<object or if same type>
+        if prop is object
+            make prop object of class prop
+            classes.add(prop)
+            defineClass(prop)
+
+
+

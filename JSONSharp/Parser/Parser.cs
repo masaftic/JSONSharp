@@ -1,16 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.NetworkInformation;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using JSONSharp.lexer;
 using JSONSharp.types;
-using JSONSharp.Visitor;
-using JSONSharp;
-using System.Runtime.Serialization;
 
 
 namespace JSONSharp.Parser;
@@ -30,9 +19,9 @@ public class Parser
         _tokens = tokens;
     }
 
-    public JSON Parse()
+    public JSONValue Parse()
     {
-        JSON json;
+        JSONValue json;
         if (Match(TokenType.LEFT_CURLY_BRACKET))
         {
             _inObjectOrArray = true;
@@ -56,7 +45,7 @@ public class Parser
         return json;
     }
 
-    private JSON ParseJSONValue()
+    private JSONValue ParseJSONValue()
     {
         Token token = Peek();
         switch (token.type)

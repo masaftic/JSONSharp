@@ -34,6 +34,13 @@ A lightweight C# project for basic JSON parsing, providing functionality to lex 
     Console.WriteLine(printer.Stringifiy(json));
     ```
 
+4. **Nested Access:**
+   ```
+   Console.WriteLine(json["properties:age:title"]);
+   Console.WriteLine(json["required:1"]);
+   ```
+
+
 ## Getting Started
 ### Prerequisites
 - .NET SDK [Link](https://dotnet.microsoft.com/en-us/download)
