@@ -35,7 +35,7 @@ A lightweight C# project for basic JSON parsing, providing functionality to lex 
     ```
 
 4. **Nested Access:**
-   ```
+   ```csharp
    Console.WriteLine(json["properties:age:title"]);
    Console.WriteLine(json["required:1"]);
    ```

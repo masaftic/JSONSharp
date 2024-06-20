@@ -20,7 +20,6 @@ public class JSONObject : JSONValue
             JSONValue? current = this;
             foreach (string to in keys)
             {
-                Console.WriteLine(current.GetType());
                 if (int.TryParse(to, out int index))
                 {
                     current = ((JSONArray)current).Values[index];
